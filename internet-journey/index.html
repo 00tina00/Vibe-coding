@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="سفر یک درخواست در اینترنت — تجربه تعاملی پست‌خانه اینترنت" />
+  <title>سفر یک درخواست در اینترنت</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient-fog" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="top-bar glass">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">📬</span>
+      <h1>سفر یک درخواست در اینترنت</h1>
+    </div>
+    <div class="top-actions">
+      <button type="button" class="icon-btn" id="btn-help" title="راهنما" aria-label="راهنما">؟</button>
+      <label class="toggle-pill" title="پخش خودکار">
+        <input type="checkbox" id="auto-mode" />
+        <span>خودکار</span>
+      </label>
+      <button type="button" class="icon-btn" id="btn-theme" title="تغییر تم" aria-label="تغییر تم">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <aside class="sidebar glass" id="sidebar">
+    <section class="panel welcome-panel">
+      <h2>به پست‌خانه اینترنت خوش آمدید</h2>
+      <p>یک ماکت سه‌بعدی واقعی — هر اتاق یک فناوری اینترنت است. بچرخانید، زوم کنید، و سفر داده را دنبال کنید.</p>
+      <p class="hint">روی هر مرحله در نوار پایین کلیک کنید.</p>
+    </section>
+
+    <section class="panel legend-panel">
+      <h3>راهنمای مسیر</h3>
+      <ul class="legend">
+        <li><span class="dot dot-current"></span> مرحله فعلی</li>
+        <li><span class="dot dot-next"></span> مرحله بعد</li>
+        <li><span class="dot dot-done"></span> تکمیل‌شده</li>
+        <li><span class="dot dot-pending"></span> در انتظار</li>
+      </ul>
+    </section>
+
+    <section class="panel stage-panel" id="stage-info">
+      <span class="stage-badge" id="stage-num">۱ از ۱۰</span>
+      <h2 id="stage-title">کلاینت</h2>
+      <p class="stage-tech" id="stage-tech">Client</p>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <p class="stage-desc" id="stage-desc"></p>
+      <div class="stage-detail glass-inset" id="stage-detail"></div>
+    </section>
+
+  </aside>
+
+  <main class="viewport" id="viewport">
+    <div class="viewport-hint glass-inset">بکشید برای چرخش · راست‌کلیک جابجایی · اسکرول زوم</div>
+    <div class="zoom-controls" aria-label="زوم">
+      <button type="button" class="zoom-btn" id="zoom-in" title="بزرگ‌نمایی">+</button>
+      <button type="button" class="zoom-btn" id="zoom-out" title="کوچک‌نمایی">−</button>
+      <button type="button" class="zoom-btn" id="zoom-reset" title="بازنشانی نما">◎</button>
+    </div>
+    <canvas id="world-canvas" aria-label="دنیای سه‌بعدی پست‌خانه اینترنت"></canvas>
+  </main>
+
+  <nav class="timeline glass" aria-label="مراحل سفر">
+    <div class="timeline-track" id="timeline-track"></div>
+  </nav>
+
+  <dialog class="modal glass" id="help-modal">
+    <button type="button" class="modal-close" id="close-help" aria-label="بستن">×</button>
+    <h2>راهنمای تعامل</h2>
+    <ul>
+      <li>کلیک چپ + بکشید: چرخش دوربین</li>
+      <li>کلیک راست + بکشید: جابجایی (pan)</li>
+      <li>اسکرول: زوم</li>
+      <li>روی کارت‌های پایین کلیک کنید — دوربین به آن بخش می‌رود</li>
+      <li>کاراکتر کوچک مسیر داده را بین اتاق‌ها طی می‌کند</li>
+    </ul>
+  </dialog>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

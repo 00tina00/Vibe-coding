@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FlowTask — premium productivity to-do app with gamification, focus mode, and smart scheduling." />
+  <title>FlowTask — Smart To-Do</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="confetti-canvas" aria-hidden="true"></div>
+
+  <!-- Achievement toast -->
+  <div id="achievement-toast" class="achievement-toast" role="alert" hidden>
+    <span class="achievement-icon">🏆</span>
+    <div>
+      <strong id="achievement-title"></strong>
+      <p id="achievement-desc"></p>
+    </div>
+  </div>
+
+  <!-- Level up overlay -->
+  <div id="levelup-overlay" class="levelup-overlay" hidden role="dialog" aria-label="Level up">
+    <div class="levelup-card" id="levelup-card">
+      <span class="levelup-spark">✨</span>
+      <h2>Level Up!</h2>
+      <p>You reached <strong id="levelup-number"></strong></p>
+    </div>
+  </div>
+
+  <!-- Mobile sidebar backdrop -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-name">FlowTask</span>
+      </div>
+
+      <div class="xp-widget glass-card">
+        <div class="xp-header">
+          <span>Level <strong id="user-level">1</strong></span>
+          <span id="user-xp-text">0 XP</span>
+        </div>
+        <div class="xp-bar"><div id="xp-bar-fill" class="xp-bar-fill"></div></div>
+        <div class="streak-row">
+          <span>🔥 <strong id="daily-streak">0</strong> day streak</span>
+          <span>⭐ <strong id="productivity-score">0</strong></span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-item" data-view="today">
+          <span class="nav-icon">☀️</span> Today
+        </button>
+        <button class="nav-item" data-view="upcoming">
+          <span class="nav-icon">📅</span> Upcoming
+        </button>
+        <button class="nav-item" data-view="important">
+          <span class="nav-icon">⭐</span> Important
+        </button>
+        <button class="nav-item" data-view="overdue">
+          <span class="nav-icon">⏰</span> Overdue
+        </button>
+        <button class="nav-item" data-view="completed">
+          <span class="nav-icon">✅</span> Completed
+        </button>
+        <button class="nav-item" data-view="projects">
+          <span class="nav-icon">📁</span> Projects
+        </button>
+        <button class="nav-item" data-view="all">
+          <span class="nav-icon">📋</span> All Tasks
+        </button>
+        <button class="nav-item" data-view="calendar">
+          <span class="nav-icon">🗓️</span> Calendar
+        </button>
+        <button class="nav-item" data-view="focus">
+          <span class="nav-icon">🎯</span> Focus Mode
+        </button>
+        <button class="nav-item" data-view="review">
+          <span class="nav-icon">📈</span> Weekly Review
+        </button>
+      </nav>
+
+      <div class="sidebar-projects">
+        <div class="sidebar-section-title">
+          <span>Projects</span>
+          <button id="btn-add-project" class="icon-btn-sm" title="Add project">+</button>
+        </div>
+        <ul id="project-list" class="project-list"></ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon-light">🌙</span>
+          <span class="theme-icon-dark">☀️</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="main-header">
+        <button id="menu-toggle" class="icon-btn menu-toggle" aria-label="Open menu">☰</button>
+        <div class="header-titles">
+          <h1 id="view-title">Dashboard</h1>
+          <p id="motivation-text" class="motivation-text"></p>
+        </div>
+        <div class="header-actions">
+          <div class="search-wrap">
+            <input type="search" id="search-input" placeholder="Search tasks…" autocomplete="off" />
+          </div>
+          <select id="filter-priority" class="filter-select" aria-label="Filter by priority">
+            <option value="">All priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+          <select id="filter-energy" class="filter-select" aria-label="Filter by energy">
+            <option value="">All energy</option>
+            <option value="deep">Deep Focus</option>
+            <option value="quick">Quick Win</option>
+            <option value="low">Low Energy</option>
+            <option value="creative">Creative</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- View panels -->
+      <div id="view-panels" class="view-panels">
+        <!-- Dashboard -->
+        <section id="panel-dashboard" class="view-panel active">
+          <div class="dashboard-grid">
+            <div class="stat-card glass-card">
+              <span class="stat-label">Completed today</span>
+              <strong id="stat-completed-today" class="stat-value">0</strong>
+            </div>
+            <div class="stat-card glass-card">
+              <span class="stat-label">Remaining today</span>
+              <strong id="stat-remaining-today" class="stat-value">0</strong>
+            </div>
+            <div class="stat-card glass-card">
+              <span class="stat-label">Focus time</span>
+              <strong id="stat-focus-time" class="stat-value">0m</strong>
+            </div>
+            <div class="stat-card glass-card">
+              <span class="stat-label">Daily score</span>
+              <strong id="stat-daily-score" class="stat-value">0</strong>
+            </div>
+          </div>
+          <div class="dashboard-row">
+            <div class="glass-card dashboard-card">
+              <h3>Upcoming</h3>
+              <ul id="dashboard-upcoming" class="mini-task-list"></ul>
+            </div>
+            <div class="glass-card dashboard-card">
+              <h3>Achievements</h3>
+              <div id="achievement-badges" class="achievement-badges"></div>
+            </div>
+          </div>
+          <div class="glass-card daily-review">
+            <h3>Daily Review</h3>
+            <p id="daily-review-text"></p>
+          </div>
+        </section>
+
+        <!-- Task list views -->
+        <section id="panel-tasks" class="view-panel" hidden>
+          <div id="overdue-banner" class="overdue-banner" hidden>
+            <p>You have overdue tasks. Let's reschedule them — no guilt, just progress.</p>
+            <button id="btn-reschedule-overdue" class="btn-secondary">Reschedule all to today</button>
+          </div>
+          <ul id="task-list" class="task-list"></ul>
+          <div id="empty-state" class="empty-state" hidden>
+            <div class="empty-illustration">📝</div>
+            <h3>No tasks here yet</h3>
+            <p>Tap the <strong>+</strong> button to create a task. Try natural language in the title like <em>tomorrow at 5pm</em>.</p>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="panel-projects" class="view-panel" hidden>
+          <div id="projects-grid" class="projects-grid"></div>
+        </section>
+
+        <!-- Calendar -->
+        <section id="panel-calendar" class="view-panel" hidden>
+          <div class="calendar-toolbar">
+            <button id="cal-prev" class="icon-btn" aria-label="Previous month">‹</button>
+            <h2 id="cal-month-label"></h2>
+            <button id="cal-next" class="icon-btn" aria-label="Next month">›</button>
+            <button id="cal-today" class="btn-secondary btn-sm">Today</button>
+          </div>
+          <div class="calendar-weekdays">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+            <span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div id="calendar-grid" class="calendar-grid"></div>
+          <div class="weekly-planner glass-card">
+            <h3>This week</h3>
+            <div id="weekly-planner" class="weekly-planner"></div>
+          </div>
+        </section>
+
+        <!-- Focus + Pomodoro -->
+        <section id="panel-focus" class="view-panel" hidden>
+          <div class="focus-container glass-card">
+            <p class="focus-label">Focus on one thing</p>
+            <h2 id="focus-task-title">Pick a task to begin</h2>
+            <div class="pomodoro">
+              <div id="pomodoro-ring" class="pomodoro-ring">
+                <span id="pomodoro-time">25:00</span>
+              </div>
+              <div class="pomodoro-controls">
+                <button id="pomo-start" class="btn-primary">Start</button>
+                <button id="pomo-pause" class="btn-secondary" hidden>Pause</button>
+                <button id="pomo-reset" class="btn-ghost">Reset</button>
+              </div>
+              <p id="pomo-mode-label" class="pomo-mode">Work session</p>
+              <p class="pomo-stats">Sessions today: <strong id="pomo-sessions">0</strong></p>
+            </div>
+            <select id="focus-task-select" class="filter-select focus-select" aria-label="Select focus task"></select>
+          </div>
+        </section>
+
+        <!-- Weekly review -->
+        <section id="panel-review" class="view-panel" hidden>
+          <div class="review-grid">
+            <div class="glass-card">
+              <h3>Completion trend</h3>
+              <canvas id="chart-weekly" width="400" height="180" aria-label="Weekly completion chart"></canvas>
+            </div>
+            <div class="glass-card">
+              <h3>Insights</h3>
+              <ul id="review-insights" class="review-insights"></ul>
+            </div>
+            <div class="glass-card">
+              <h3>Streak analytics</h3>
+              <p>Current daily streak: <strong id="review-streak">0</strong> days</p>
+              <p>Weekly streak: <strong id="review-weekly-streak">0</strong> weeks</p>
+              <p>Most productive day: <strong id="review-best-day">—</strong></p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- FAB -->
+  <button id="fab-quick-add" class="fab" aria-label="Create new task">+</button>
+
+  <!-- Task modal -->
+  <div id="task-modal" class="modal" hidden role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-content glass-card">
+      <header class="modal-header">
+        <h2 id="modal-title">Edit task</h2>
+        <button class="icon-btn" data-close-modal aria-label="Close">×</button>
+      </header>
+      <form id="task-form" class="task-form">
+        <input type="hidden" id="task-id" />
+        <label>
+          Title
+          <input type="text" id="task-title" required />
+        </label>
+        <label>
+          Notes
+          <textarea id="task-notes" rows="3"></textarea>
+        </label>
+        <div class="form-row">
+          <label>
+            Priority
+            <select id="task-priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </label>
+          <label>
+            Project
+            <select id="task-project"></select>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>
+            Due date
+            <input type="date" id="task-due" />
+          </label>
+          <label>
+            Reminder
+            <input type="datetime-local" id="task-reminder" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>
+            Energy
+            <select id="task-energy">
+              <option value="">None</option>
+              <option value="deep">Deep Focus</option>
+              <option value="quick">Quick Win</option>
+              <option value="low">Low Energy</option>
+              <option value="creative">Creative</option>
+              <option value="admin">Admin</option>
+            </select>
+          </label>
+          <label>
+            Recurring
+            <select id="task-recurring">
+              <option value="">None</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="custom">Custom (weekdays)</option>
+            </select>
+          </label>
+        </div>
+        <label class="checkbox-label">
+          <input type="checkbox" id="task-important" />
+          Mark as important
+        </label>
+        <label>
+          Tags <span class="hint">(comma separated)</span>
+          <input type="text" id="task-tags" placeholder="work, personal" />
+        </label>
+        <fieldset class="subtasks-fieldset">
+          <legend>Subtasks</legend>
+          <ul id="subtask-list" class="subtask-edit-list"></ul>
+          <button type="button" id="btn-add-subtask" class="btn-ghost btn-sm">+ Add subtask</button>
+        </fieldset>
+        <footer class="modal-footer">
+          <button type="button" id="btn-delete-task" class="btn-danger">Delete</button>
+          <button type="submit" class="btn-primary">Save task</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Snooze modal -->
+  <div id="snooze-modal" class="modal modal-sm" hidden role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close-snooze></div>
+    <div class="modal-content glass-card">
+      <h3>Snooze reminder</h3>
+      <div class="snooze-options">
+        <button type="button" data-snooze="15">15 min</button>
+        <button type="button" data-snooze="60">1 hour</button>
+        <button type="button" data-snooze="1440">Tomorrow</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
