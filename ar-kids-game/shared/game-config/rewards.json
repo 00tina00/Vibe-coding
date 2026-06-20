@@ -1,0 +1,17 @@
+{
+  "correctFind": {
+    "stars": 1,
+    "particleDuration": 800,
+    "celebrationDelay": 600
+  },
+  "milestones": [
+    { "finds": 5, "voiceKey": "milestone5" },
+    { "finds": 10, "voiceKey": "milestone10" },
+    { "finds": 25, "voiceKey": "milestone25" }
+  ],
+  "encouragement": [
+    "tryAgain",
+    "almostThere",
+    "keepLooking"
+  ]
+}

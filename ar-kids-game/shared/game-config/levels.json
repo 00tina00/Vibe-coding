@@ -1,0 +1,30 @@
+{
+  "levels": [
+    {
+      "level": 1,
+      "objectCount": 3,
+      "findsToAdvance": 10,
+      "spawnRadius": 2.5,
+      "floatSpeed": 0.4,
+      "rotationSpeed": 0.6
+    },
+    {
+      "level": 2,
+      "objectCount": 5,
+      "findsToAdvance": 10,
+      "spawnRadius": 3.0,
+      "floatSpeed": 0.5,
+      "rotationSpeed": 0.7
+    },
+    {
+      "level": 3,
+      "objectCount": 8,
+      "findsToAdvance": 10,
+      "spawnRadius": 3.5,
+      "floatSpeed": 0.6,
+      "rotationSpeed": 0.8
+    }
+  ],
+  "maxLevel": 3,
+  "defaultLevel": 1
+}

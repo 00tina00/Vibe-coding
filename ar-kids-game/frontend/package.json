@@ -1,0 +1,19 @@
+{
+  "name": "ar-kids-game-frontend",
+  "version": "1.0.0",
+  "description": "Mobile AR Kids Treasure Hunt - Frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.7",
+    "three": "^0.172.0",
+    "tone": "^15.0.4"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  }
+}

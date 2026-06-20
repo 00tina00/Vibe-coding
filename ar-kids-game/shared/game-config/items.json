@@ -1,0 +1,74 @@
+{
+  "star": {
+    "id": "star",
+    "model": "/models/star.glb",
+    "icon": "/icons/star.svg",
+    "voiceKey": "star",
+    "color": "#FFD700",
+    "scale": 1.0
+  },
+  "sun": {
+    "id": "sun",
+    "model": "/models/sun.glb",
+    "icon": "/icons/sun.svg",
+    "voiceKey": "sun",
+    "color": "#FF9500",
+    "scale": 1.1
+  },
+  "cloud": {
+    "id": "cloud",
+    "model": "/models/cloud.glb",
+    "icon": "/icons/cloud.svg",
+    "voiceKey": "cloud",
+    "color": "#87CEEB",
+    "scale": 1.0
+  },
+  "rainbow": {
+    "id": "rainbow",
+    "model": "/models/rainbow.glb",
+    "icon": "/icons/rainbow.svg",
+    "voiceKey": "rainbow",
+    "color": "#FF6B9D",
+    "scale": 1.2
+  },
+  "heart": {
+    "id": "heart",
+    "model": "/models/heart.glb",
+    "icon": "/icons/heart.svg",
+    "voiceKey": "heart",
+    "color": "#FF4D6D",
+    "scale": 1.0
+  },
+  "rocket": {
+    "id": "rocket",
+    "model": "/models/rocket.glb",
+    "icon": "/icons/rocket.svg",
+    "voiceKey": "rocket",
+    "color": "#6C63FF",
+    "scale": 1.1
+  },
+  "teddy": {
+    "id": "teddy",
+    "model": "/models/teddy.glb",
+    "icon": "/icons/teddy.svg",
+    "voiceKey": "teddy",
+    "color": "#C4956A",
+    "scale": 1.0
+  },
+  "butterfly": {
+    "id": "butterfly",
+    "model": "/models/butterfly.glb",
+    "icon": "/icons/butterfly.svg",
+    "voiceKey": "butterfly",
+    "color": "#B565FF",
+    "scale": 0.9
+  },
+  "dinosaur": {
+    "id": "dinosaur",
+    "model": "/models/dinosaur.glb",
+    "icon": "/icons/dinosaur.svg",
+    "voiceKey": "dinosaur",
+    "color": "#4CAF50",
+    "scale": 1.2
+  }
+}

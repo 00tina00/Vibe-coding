@@ -1,0 +1,6 @@
+{
+  "port": 3001,
+  "defaultLanguage": "fa",
+  "defaultDifficulty": 1,
+  "corsOrigin": "*"
+}
