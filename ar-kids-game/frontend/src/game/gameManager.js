@@ -141,6 +141,7 @@ export class GameManager {
 
     this.spawnManager.animate(delta);
     this.particleManager.update(delta);
+    this.sceneRenderer.update();
     this.sceneRenderer.render();
 
     requestAnimationFrame(() => this.loop());

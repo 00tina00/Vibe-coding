@@ -43,13 +43,14 @@ async function bootstrap() {
     try {
       await cameraManager.start();
       await audioManager.init();
+      await sceneRenderer.connectOrientation();
 
       const config = await fetchGameConfig(language);
       await voiceManager.loadLanguage(language);
       await assetLoader.preloadAll(config.items);
 
       const spawnManager = new SpawnManager(
-        sceneRenderer.getObjectAnchor(),
+        sceneRenderer.getWorldGroup(),
         assetLoader
       );
       const scoreManager = new ScoreManager();

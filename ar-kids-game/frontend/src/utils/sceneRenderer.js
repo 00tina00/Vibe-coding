@@ -1,12 +1,16 @@
 import * as THREE from "three";
 import gsap from "gsap";
+import { DeviceOrientationManager } from "../camera/deviceOrientationManager.js";
 
 export class SceneRenderer {
   constructor(canvas) {
     this.canvas = canvas;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 100);
     this.camera.position.set(0, 0, 0);
+
+    this.worldGroup = new THREE.Group();
+    this.scene.add(this.worldGroup);
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -17,9 +21,8 @@ export class SceneRenderer {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setClearColor(0x000000, 0);
 
-    this.objectAnchor = new THREE.Group();
-    this.camera.add(this.objectAnchor);
-    this.scene.add(this.camera);
+    this.deviceOrientation = new DeviceOrientationManager(this.camera);
+    this.orientationReady = false;
 
     this.setupLights();
     this.raycaster = new THREE.Raycaster();
@@ -30,10 +33,14 @@ export class SceneRenderer {
   }
 
   setupLights() {
-    const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-    const directional = new THREE.DirectionalLight(0xffffff, 1.2);
-    directional.position.set(2, 3, 4);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+    const directional = new THREE.DirectionalLight(0xffffff, 1.0);
+    directional.position.set(2, 4, 3);
     this.scene.add(ambient, directional);
+  }
+
+  async connectOrientation() {
+    this.orientationReady = await this.deviceOrientation.start();
   }
 
   resize() {
@@ -44,8 +51,12 @@ export class SceneRenderer {
     this.renderer.setSize(width, height, false);
   }
 
-  getObjectAnchor() {
-    return this.objectAnchor;
+  getWorldGroup() {
+    return this.worldGroup;
+  }
+
+  update() {
+    // orientation updates via deviceorientation event listener
   }
 
   render() {
@@ -68,13 +79,15 @@ export class SceneRenderer {
   }
 
   pulseObject(mesh) {
+    const base = mesh.userData.baseScale || mesh.scale.clone();
+    mesh.userData.baseScale = base;
     gsap.fromTo(
       mesh.scale,
-      { x: mesh.scale.x * 1.3, y: mesh.scale.y * 1.3, z: mesh.scale.z * 1.3 },
+      { x: base.x * 1.4, y: base.y * 1.4, z: base.z * 1.4 },
       {
-        x: mesh.scale.x,
-        y: mesh.scale.y,
-        z: mesh.scale.z,
+        x: base.x,
+        y: base.y,
+        z: base.z,
         duration: 0.4,
         ease: "elastic.out(1, 0.5)",
       }
@@ -82,13 +95,14 @@ export class SceneRenderer {
   }
 
   shakeObject(mesh) {
+    const originX = mesh.position.x;
     gsap.to(mesh.position, {
-      x: mesh.position.x + 0.05,
+      x: originX + 0.08,
       duration: 0.05,
       yoyo: true,
       repeat: 5,
       onComplete: () => {
-        gsap.set(mesh.position, { x: mesh.position.x });
+        mesh.position.x = originX;
       },
     });
   }

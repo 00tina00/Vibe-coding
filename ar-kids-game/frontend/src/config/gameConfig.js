@@ -5,10 +5,10 @@ export const gameConfig = {
   spawn: {
     minCount: 5,
     maxCount: 8,
-    minDistance: 0.8,
-    depthMin: -6,
-    depthMax: -3,
-    verticalSpread: 1.5,
+    worldRadius: 6,
+    minAngularDistance: 0.35,
+    pitchMin: -0.35,
+    pitchMax: 0.35,
   },
   animation: {
     floatAmplitude: 0.15,

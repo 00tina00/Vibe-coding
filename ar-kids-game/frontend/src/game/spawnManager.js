@@ -2,12 +2,12 @@ import * as THREE from "three";
 import { gameConfig } from "../config/gameConfig.js";
 
 export class SpawnManager {
-  constructor(scene, assetLoader) {
-    this.scene = scene;
+  constructor(worldGroup, assetLoader) {
+    this.worldGroup = worldGroup;
     this.assetLoader = assetLoader;
     this.objects = [];
     this.objectGroup = new THREE.Group();
-    this.scene.add(this.objectGroup);
+    this.worldGroup.add(this.objectGroup);
   }
 
   clear() {
@@ -26,14 +26,14 @@ export class SpawnManager {
     );
 
     const selectedIds = this.pickItemIds(itemIds, count);
-    const positions = this.generatePositions(count, levelConfig.spawnRadius);
+    const positions = this.generateWorldPositions(count);
 
     for (let i = 0; i < selectedIds.length; i++) {
       const itemId = selectedIds[i];
       const config = itemsConfig[itemId];
       const mesh = await this.assetLoader.loadItem(itemId, config);
 
-      mesh.userData.itemId = itemId;
+      this.tagItemId(mesh, itemId);
       mesh.position.copy(positions[i]);
       mesh.userData.baseY = positions[i].y;
       mesh.userData.floatOffset = Math.random() * Math.PI * 2;
@@ -47,6 +47,13 @@ export class SpawnManager {
     return this.objects;
   }
 
+  tagItemId(object, itemId) {
+    object.userData.itemId = itemId;
+    object.traverse((child) => {
+      child.userData.itemId = itemId;
+    });
+  }
+
   pickItemIds(allIds, count) {
     const shuffled = [...allIds].sort(() => Math.random() - 0.5);
     const result = shuffled.slice(0, count);
@@ -58,45 +65,42 @@ export class SpawnManager {
     return result;
   }
 
-  generatePositions(count, radius) {
+  generateWorldPositions(count) {
     const positions = [];
-    const minDist = gameConfig.spawn.minDistance;
-    const maxAttempts = 100;
+    const radius = gameConfig.spawn.worldRadius;
+    const minAngle = gameConfig.spawn.minAngularDistance;
+    const yaws = [];
 
     for (let i = 0; i < count; i++) {
+      let yaw = 0;
       let placed = false;
 
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        const pos = this.randomPosition(radius);
-        if (this.isFarEnough(pos, positions, minDist)) {
-          positions.push(pos);
+      for (let attempt = 0; attempt < 80; attempt++) {
+        yaw = (Math.random() - 0.5) * Math.PI * 1.6;
+        if (yaws.every((y) => Math.abs(y - yaw) >= minAngle)) {
           placed = true;
           break;
         }
       }
 
       if (!placed) {
-        positions.push(this.randomPosition(radius * 0.8));
+        yaw = -Math.PI * 0.8 + (i / count) * Math.PI * 1.6;
       }
+
+      yaws.push(yaw);
+
+      const pitch =
+        gameConfig.spawn.pitchMin +
+        Math.random() * (gameConfig.spawn.pitchMax - gameConfig.spawn.pitchMin);
+
+      const x = radius * Math.cos(pitch) * Math.sin(yaw);
+      const y = radius * Math.sin(pitch);
+      const z = -radius * Math.cos(pitch) * Math.cos(yaw);
+
+      positions.push(new THREE.Vector3(x, y, z));
     }
 
     return positions;
-  }
-
-  randomPosition(radius) {
-    const angle = Math.random() * Math.PI * 2;
-    const r = Math.random() * radius;
-    const x = Math.cos(angle) * r;
-    const y = (Math.random() - 0.5) * gameConfig.spawn.verticalSpread;
-    const z =
-      gameConfig.spawn.depthMin +
-      Math.random() * (gameConfig.spawn.depthMax - gameConfig.spawn.depthMin);
-
-    return new THREE.Vector3(x, y, z);
-  }
-
-  isFarEnough(pos, existing, minDist) {
-    return existing.every((p) => pos.distanceTo(p) >= minDist);
   }
 
   animate(delta) {
@@ -104,10 +108,12 @@ export class SpawnManager {
 
     this.objects.forEach(({ mesh }) => {
       mesh.rotation.y += (mesh.userData.rotationSpeed || 0.5) * delta;
-      mesh.rotation.x += delta * 0.2;
       mesh.position.y =
         mesh.userData.baseY +
-        Math.sin(performance.now() * 0.001 * mesh.userData.floatSpeed + mesh.userData.floatOffset) *
+        Math.sin(
+          performance.now() * 0.001 * mesh.userData.floatSpeed +
+            mesh.userData.floatOffset
+        ) *
           amplitude;
 
       if (mesh.userData.glow) {
@@ -124,8 +130,10 @@ export class SpawnManager {
   findObjectByMesh(mesh) {
     let current = mesh;
     while (current) {
-      const found = this.objects.find((o) => o.mesh === current);
-      if (found) return found;
+      if (current.userData?.itemId) {
+        const id = current.userData.itemId;
+        return this.objects.find((o) => o.itemId === id) || null;
+      }
       current = current.parent;
     }
     return null;
