@@ -6,7 +6,9 @@ frontend/dist/
 
 # Environment
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.example
 
 # Logs
 *.log
