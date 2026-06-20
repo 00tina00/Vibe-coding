@@ -58,7 +58,7 @@ export class GameManager {
     );
 
     const spawnedIds = this.spawnManager.objects.map((o) => o.itemId);
-    this.targetManager.selectNewTarget(spawnedIds);
+    this.targetManager.selectFromSpawned(spawnedIds);
     const target = this.targetManager.getCurrentTarget();
     this.voiceManager.announceTarget(target.voiceKey);
   }
@@ -118,7 +118,9 @@ export class GameManager {
     }
 
     const spawnedIds = this.spawnManager.objects.map((o) => o.itemId);
-    const next = this.targetManager.selectNewTarget(spawnedIds);
+    const next = this.targetManager.selectFromSpawned(spawnedIds, [
+      this.targetManager.currentTargetId,
+    ]);
     this.voiceManager.announceSuccess(next.voiceKey);
   }
 

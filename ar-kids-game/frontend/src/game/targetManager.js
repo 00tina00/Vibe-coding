@@ -18,22 +18,22 @@ export class TargetManager {
     this.listeners.forEach((cb) => cb(target));
   }
 
-  pickRandom(excludeIds = []) {
-    const available = this.itemIds.filter((id) => !excludeIds.includes(id));
-    const pool = available.length > 0 ? available : this.itemIds;
-    const index = Math.floor(Math.random() * pool.length);
-    return pool[index];
+  pickFromPool(pool, excludeIds = []) {
+    const available = pool.filter((id) => !excludeIds.includes(id));
+    const finalPool = available.length > 0 ? available : pool;
+    const index = Math.floor(Math.random() * finalPool.length);
+    return finalPool[index];
+  }
+
+  selectFromSpawned(spawnedIds, excludeIds = []) {
+    const id = this.pickFromPool(spawnedIds, excludeIds);
+    this.setTarget(id);
+    return this.getCurrentTarget();
   }
 
   setTarget(itemId) {
     this.currentTargetId = itemId;
     this.notify();
-  }
-
-  selectNewTarget(excludeIds = []) {
-    const id = this.pickRandom(excludeIds);
-    this.setTarget(id);
-    return this.getCurrentTarget();
   }
 
   getCurrentTarget() {

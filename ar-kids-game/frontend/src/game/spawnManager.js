@@ -73,18 +73,21 @@ export class SpawnManager {
 
     for (let i = 0; i < count; i++) {
       let yaw = 0;
-      let placed = false;
 
-      for (let attempt = 0; attempt < 80; attempt++) {
-        yaw = (Math.random() - 0.5) * Math.PI * 1.6;
-        if (yaws.every((y) => Math.abs(y - yaw) >= minAngle)) {
-          placed = true;
-          break;
+      if (i === 0) {
+        yaw = 0;
+      } else {
+        let placed = false;
+        for (let attempt = 0; attempt < 80; attempt++) {
+          yaw = (Math.random() - 0.5) * Math.PI * 1.6;
+          if (yaws.every((y) => Math.abs(y - yaw) >= minAngle)) {
+            placed = true;
+            break;
+          }
         }
-      }
-
-      if (!placed) {
-        yaw = -Math.PI * 0.8 + (i / count) * Math.PI * 1.6;
+        if (!placed) {
+          yaw = -Math.PI * 0.8 + (i / count) * Math.PI * 1.6;
+        }
       }
 
       yaws.push(yaw);

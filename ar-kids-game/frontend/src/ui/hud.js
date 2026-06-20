@@ -11,12 +11,11 @@ export class Hud {
         <div class="hud__score" id="hud-score">⭐ ۰</div>
 
         <div class="hud__target-panel" id="hud-target-panel">
-          <div class="hud__target-prompt">${this.strings.findThis}</div>
-          <div class="hud__target-icon-wrap">
-            <div class="hud__target-ring"></div>
-            <img class="hud__target-icon" id="hud-target-icon" alt="" />
+          <img class="hud__target-icon" id="hud-target-icon" alt="" />
+          <div class="hud__target-info">
+            <div class="hud__target-prompt">${this.strings.findThis}</div>
+            <div class="hud__target-name" id="hud-target-name"></div>
           </div>
-          <div class="hud__target-name" id="hud-target-name"></div>
         </div>
 
         <div class="hud__hint">${this.strings.lookAround}</div>
@@ -50,12 +49,12 @@ export class Hud {
         left: 50%;
         transform: translateX(-50%);
         margin-top: 8px;
-        font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+        font-size: clamp(1rem, 3vw, 1.4rem);
         font-weight: 800;
         color: #fff;
         text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         background: rgba(255, 215, 0, 0.3);
-        padding: 0.35rem 1rem;
+        padding: 0.3rem 0.8rem;
         border-radius: 999px;
         border: 2px solid rgba(255, 215, 0, 0.7);
         font-family: "Vazirmatn", sans-serif;
@@ -63,72 +62,63 @@ export class Hud {
       }
       .hud__target-panel {
         position: absolute;
-        top: env(safe-area-inset-top, 8px);
-        left: 50%;
-        transform: translateX(-50%);
-        margin-top: 52px;
+        top: env(safe-area-inset-top, 10px);
+        right: 12px;
+        margin-top: 8px;
         display: flex;
-        flex-direction: column;
+        flex-direction: row-reverse;
         align-items: center;
-        gap: 0.4rem;
-        background: rgba(26, 10, 46, 0.75);
-        border: 3px solid #ffd700;
-        border-radius: 20px;
-        padding: 0.6rem 1.2rem 0.8rem;
-        box-shadow: 0 4px 24px rgba(255, 215, 0, 0.35);
+        gap: 0.5rem;
+        background: rgba(26, 10, 46, 0.82);
+        border: 2px solid #ffd700;
+        border-radius: 14px;
+        padding: 0.4rem 0.6rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
         z-index: 3;
-        min-width: clamp(140px, 30vw, 200px);
-      }
-      .hud__target-prompt {
-        font-size: clamp(1rem, 3vw, 1.3rem);
-        font-weight: 800;
-        color: #ffd700;
-        font-family: "Vazirmatn", sans-serif;
-        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-      }
-      .hud__target-icon-wrap {
-        position: relative;
-        width: clamp(80px, 20vw, 120px);
-        height: clamp(80px, 20vw, 120px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .hud__target-ring {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        border: 4px solid #fff;
-        box-shadow: 0 0 24px rgba(255,215,0,0.6);
-        animation: pulse-ring 1.5s ease-in-out infinite;
-      }
-      @keyframes pulse-ring {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.85; }
+        max-width: 42vw;
       }
       .hud__target-icon {
-        width: 70%;
-        height: 70%;
+        width: clamp(36px, 9vw, 48px);
+        height: clamp(36px, 9vw, 48px);
         object-fit: contain;
-        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-        z-index: 1;
+        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
+        flex-shrink: 0;
+        background: rgba(255,255,255,0.12);
+        border-radius: 50%;
+        padding: 4px;
+      }
+      .hud__target-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        min-width: 0;
+      }
+      .hud__target-prompt {
+        font-size: clamp(0.65rem, 2vw, 0.75rem);
+        font-weight: 700;
+        color: #ffd700;
+        font-family: "Vazirmatn", sans-serif;
+        line-height: 1.2;
       }
       .hud__target-name {
-        font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+        font-size: clamp(0.85rem, 2.5vw, 1rem);
         font-weight: 800;
         color: #fff;
         font-family: "Vazirmatn", sans-serif;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .hud__hint {
         position: absolute;
         bottom: env(safe-area-inset-bottom, 12px);
         left: 50%;
         transform: translateX(-50%);
-        font-size: clamp(0.85rem, 2.5vw, 1rem);
+        font-size: clamp(0.75rem, 2.2vw, 0.9rem);
         color: rgba(255,255,255,0.85);
         background: rgba(0,0,0,0.45);
-        padding: 0.35rem 0.9rem;
+        padding: 0.3rem 0.75rem;
         border-radius: 999px;
         font-family: "Vazirmatn", sans-serif;
         z-index: 3;
@@ -136,8 +126,8 @@ export class Hud {
       .hud__level {
         position: absolute;
         bottom: env(safe-area-inset-bottom, 12px);
-        left: 16px;
-        font-size: 0.95rem;
+        left: 12px;
+        font-size: 0.85rem;
         color: rgba(255,255,255,0.9);
         text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         font-family: "Vazirmatn", sans-serif;
@@ -147,8 +137,8 @@ export class Hud {
         animation: target-flash 0.5s ease;
       }
       @keyframes target-flash {
-        0%, 100% { border-color: #ffd700; }
-        50% { border-color: #fff; transform: translateX(-50%) scale(1.05); }
+        0%, 100% { border-color: #ffd700; transform: scale(1); }
+        50% { border-color: #fff; transform: scale(1.06); }
       }
     `;
     document.head.appendChild(style);
